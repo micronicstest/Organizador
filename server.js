@@ -2,53 +2,48 @@ const express = require("express");
 const mysql = require("mysql2/promise");
 const jwt = require("jsonwebtoken");
 const cors = require("cors");
-const path = require("path");
 
 const app = express();
-const PORT = 8000;
+const PORT = process.env.PORT || 8000;
 
-// --- Configuración de MariaDB ---
+// --- Configuración de la conexión a MySQL (Railway) ---
 const dbConfig = {
-  host: "localhost",
-  user: "root",
-  password: "Root",
-  database: "control_gastos",
+  host: process.env.MYSQLHOST || "localhost",
+  user: process.env.MYSQLUSER || "root",
+  password: process.env.MYSQLPASSWORD || "",
+  database: process.env.MYSQLDATABASE || "control_gastos",
+  port: process.env.MYSQLPORT || 3306,
 };
 
 let db;
 (async () => {
   try {
     db = await mysql.createConnection(dbConfig);
-    console.log("Conectado a MariaDB");
+    console.log("Conectado a la base de datos en Railway");
   } catch (err) {
-    console.error("Error conectando a MariaDB:", err);
+    console.error("Error conectando a la base de datos:", err);
   }
 })();
 
-const JWT_SECRET = "clave_super_segura";
+const JWT_SECRET = process.env.JWT_SECRET || "clave_super_segura";
 
 app.use(cors());
 app.use(express.json());
-app.use(express.static(path.join(__dirname)));
 
-app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "index.html"));
-});
-
-// --- Middleware para verificar token ---
+// --- Middleware de autenticación ---
 function authenticateToken(req, res, next) {
   const authHeader = req.headers["authorization"];
   const token = authHeader && authHeader.split(" ")[1];
-  if (!token) return res.status(401).json({ message: "Falta token" });
+  if (!token) return res.sendStatus(401);
 
   jwt.verify(token, JWT_SECRET, (err, user) => {
-    if (err) return res.status(403).json({ message: "Token inválido" });
-    req.user = user;
+    if (err) return res.sendStatus(403);
+    req.user = user; // { id, username, rol }
     next();
   });
 }
 
-// --- Login ---
+// --- Endpoint de Login ---
 app.post("/login", async (req, res) => {
   const { username, password } = req.body;
 
@@ -59,22 +54,23 @@ app.post("/login", async (req, res) => {
     );
 
     if (rows.length === 0) {
-      return res.status(401).json({ message: "Usuario no encontrado" });
+      return res.status(401).json({ message: "Credenciales inválidas" });
     }
 
     const user = rows[0];
     if (password !== user.password) {
-      return res.status(401).json({ message: "Contraseña incorrecta" });
+      return res.status(401).json({ message: "Credenciales inválidas" });
     }
 
     const token = jwt.sign(
       { id: user.id, username: user.username, rol: user.rol },
-      JWT_SECRET
+      JWT_SECRET,
+      { expiresIn: "1h" }
     );
 
     res.json({ message: "Login exitoso", token });
   } catch (error) {
-    console.error("Error en /login:", error);
+    console.error(error);
     res.status(500).json({ message: "Error en el servidor" });
   }
 });
@@ -82,11 +78,9 @@ app.post("/login", async (req, res) => {
 // --- Obtener transacciones ---
 app.get("/transacciones", authenticateToken, async (req, res) => {
   try {
-    console.log("Usuario autenticado:", req.user);
-
     let query = `
       SELECT t.Id, t.Tipo, t.Monto, t.Descripción, t.Fecha, u.username 
-      FROM transacciones t
+      FROM transacciones t 
       JOIN usuarios u ON t.usuario_id = u.id
     `;
     const params = [];
@@ -96,12 +90,10 @@ app.get("/transacciones", authenticateToken, async (req, res) => {
       params.push(req.user.id);
     }
 
-    console.log("Ejecutando SQL:", query, params);
-
     const [rows] = await db.execute(query, params);
-    res.json(rows || []); // Devuelve [] si no hay transacciones
+    res.json(rows);
   } catch (error) {
-    console.error("Error en /transacciones:", error);
+    console.error(error);
     res.status(500).json({ message: "Error al obtener transacciones" });
   }
 });
@@ -125,7 +117,7 @@ app.post("/transacciones", authenticateToken, async (req, res) => {
       usuario_id: req.user.id,
     });
   } catch (error) {
-    console.error("Error en POST /transacciones:", error);
+    console.error(error);
     res.status(500).json({ message: "Error al crear transacción" });
   }
 });
@@ -155,7 +147,7 @@ app.put("/transacciones/:id", authenticateToken, async (req, res) => {
 
     res.json({ message: "Transacción actualizada" });
   } catch (error) {
-    console.error("Error en PUT /transacciones:", error);
+    console.error(error);
     res.status(500).json({ message: "Error al actualizar transacción" });
   }
 });
@@ -184,11 +176,12 @@ app.delete("/transacciones/:id", authenticateToken, async (req, res) => {
 
     res.json({ message: "Transacción eliminada" });
   } catch (error) {
-    console.error("Error en DELETE /transacciones:", error);
+    console.error(error);
     res.status(500).json({ message: "Error al eliminar transacción" });
   }
 });
 
+// --- Iniciar servidor ---
 app.listen(PORT, () => {
-  console.log(`Servidor corriendo en http://localhost:${PORT}`);
+  console.log(`Servidor corriendo en el puerto ${PORT}`);
 });
