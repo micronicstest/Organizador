@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Control de Gastos</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Mi Control de Gastos</h1>
+
+      <!-- Botones de sesión -->
+      <button id="abrirLogin" class="btn">Iniciar Sesión / Registrarse</button>
+      <button
+        id="cerrarSesion"
+        class="btn btn-secundario"
+        style="display: none"
+      >
+        Cerrar Sesión
+      </button>
+
+      <!-- Modal de login -->
+      <div id="loginModal" class="modal">
+        <div class="login-box">
+          <div class="login-header">INICIAR SESIÓN</div>
+          <div class="login-icon"></div>
+          <input type="text" id="username" placeholder="Usuario" required />
+          <input
+            type="password"
+            id="password"
+            placeholder="Contraseña"
+            required
+          />
+          <button id="btnLogin" class="btn btn-login">INGRESAR</button>
+          <button id="btnRegister" class="btn btn-secundario">
+            Registrarse
+          </button>
+          <button id="cerrarModal" class="btn btn-cancelar">Cancelar</button>
+          <p id="loginMsg" class="mensaje-error"></p>
+        </div>
+      </div>
+
+      <!-- Modal para editar transacción -->
+      <div id="editModal" class="modal">
+        <div class="modal-contenido">
+          <h2>Editar Transacción</h2>
+          <input
+            type="text"
+            id="editDescripcion"
+            placeholder="Descripción"
+            required
+          />
+          <input
+            type="number"
+            id="editMonto"
+            placeholder="Monto"
+            step="0.01"
+            required
+          />
+          <select id="editTipo">
+            <option value="ingreso">Ingreso</option>
+            <option value="gasto">Gasto</option>
+          </select>
+          <input type="date" id="editFecha" required />
+          <button id="guardarEdicion" class="btn">Guardar Cambios</button>
+          <button id="cancelarEdicion" class="btn btn-cancelar">
+            Cancelar
+          </button>
+        </div>
+      </div>
+
+      <!-- Formulario para agregar transacciones -->
+      <form id="transaction-form" class="formulario" style="display: none">
+        <select id="type">
+          <option value="ingreso">Ingresos</option>
+          <option value="gasto">Gastos</option>
+        </select>
+        <input
+          type="number"
+          id="amount"
+          placeholder="Monto"
+          step="0.01"
+          required
+        />
+        <input
+          type="text"
+          id="description"
+          placeholder="Descripción"
+          required
+        />
+        <input type="date" id="transactionDate" required />
+        <button type="submit" class="btn">Agregar</button>
+      </form>
+
+      <!-- Filtros y tabla -->
+      <div class="filtros">
+        <div class="filtrosSelect">
+          <div>
+            <label for="date">Fecha:</label>
+            <input type="date" id="date" name="date" />
+          </div>
+          <div>
+            <label for="filtroNombre">Filtrar por persona:</label>
+            <select id="filtroNombre">
+              <option value="todos">Todos</option>
+              <option value="deysy">Deysy</option>
+              <option value="gerald">Gerald</option>
+            </select>
+          </div>
+          <div>
+            <label for="filtroTipo">Filtrar por tipo:</label>
+            <select id="filtroTipo">
+              <option value="todos">Todos</option>
+              <option value="ingreso">Ingresos</option>
+              <option value="gasto">Gastos</option>
+            </select>
+          </div>
+        </div>
+        <div class="tableContainer">
+          <table id="transaction-table">
+            <thead>
+              <tr>
+                <th>Nombre</th>
+                <th>Tipo</th>
+                <th>Monto</th>
+                <th>Descripción</th>
+                <th>Fecha</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Gráficos -->
+      <div class="graficoSelect" style="display: none">
+        <label for="graficoSelect">Mostrar gráfico:</label>
+        <select id="graficoSelect">
+          <option value="pie">Ingresos vs Gastos (Pastel)</option>
+          <option value="bar">Resumen mensual (Barras)</option>
+        </select>
+        <div id="diferencia" class="resumen-diferencia"></div>
+        <canvas id="pieChart" width="400" height="200"></canvas>
+        <canvas
+          id="barChart"
+          style="display: none"
+          width="400"
+          height="200"
+        ></canvas>
+      </div>
+    </div>
+
+    <script src="app.js"></script>
+  </body>
+</html>

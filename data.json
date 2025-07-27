@@ -1,0 +1,20 @@
+[
+  {
+    "nombre": "deysy",
+    "tipo": "ingreso",
+    "monto": 234234,
+    "descripcion": "afsdf",
+    "fecha": "2025-07-01",
+    "id": "1753453836846",
+    "userId": "1753323955331"
+  },
+  {
+    "nombre": "deysy",
+    "tipo": "ingreso",
+    "monto": 2232,
+    "descripcion": "postres",
+    "fecha": "2025-06-29",
+    "id": "1753594982519",
+    "userId": "1753323955331"
+  }
+]

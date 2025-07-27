@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Delicias de Postres</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #fff8f0;
+        margin: 0;
+        padding: 0;
+      }
+      header {
+        background-color: #f28ab2;
+        color: white;
+        padding: 20px;
+        text-align: center;
+      }
+      h1 {
+        margin: 0;
+      }
+      .menu {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        padding: 20px;
+      }
+      .dessert {
+        background-color: #ffffff;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        margin: 15px;
+        width: 250px;
+        overflow: hidden;
+        transition: transform 0.2s;
+      }
+      .dessert:hover {
+        transform: scale(1.05);
+      }
+      .dessert img {
+        width: 100%;
+        height: 150px;
+        object-fit: cover;
+      }
+      .dessert-info {
+        padding: 15px;
+        text-align: center;
+      }
+      .dessert-info h2 {
+        margin-top: 0;
+        color: #f28ab2;
+      }
+      .footer {
+        background-color: #f28ab2;
+        color: white;
+        text-align: center;
+        padding: 15px;
+        position: fixed;
+        width: 100%;
+        bottom: 0;
+      }
+      /* Responsive adjustments */
+      @media (max-width: 768px) {
+        .menu {
+          flex-direction: column;
+          align-items: center;
+        }
+        .dessert {
+          width: 80%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Delicias de Postres</h1>
+      <p>Los mejores postres para endulzar tu día</p>
+    </header>
+    <section class="menu">
+      <!-- Postre 1 -->
+      <div class="dessert">
+        <img
+          src="https://images.unsplash.com/photo-1599785209799-0bcfcd1b55e4?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+          alt="Tarta de Chocolate"
+        />
+        <div class="dessert-info">
+          <h2>Tarta de Chocolate</h2>
+          <p>Deliciosa tarta con capa de chocolate y crema suave.</p>
+        </div>
+      </div>
+      <!-- Postre 2 -->
+      <div class="dessert">
+        <img
+          src="https://images.unsplash.com/photo-1607272582710-4f7b7b84b0d7?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+          alt="Helado de Vainilla"
+        />
+        <div class="dessert-info">
+          <h2>Helado de Vainilla</h2>
+          <p>Clásico helado de vainilla, perfecto para cualquier ocasión.</p>
+        </div>
+      </div>
+      <!-- Postre 3 -->
+      <div class="dessert">
+        <img
+          src="https://images.unsplash.com/photo-1611390370622-8d0a3b3f2c8f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+          alt="Galletas Caseras"
+        />
+        <div class="dessert-info">
+          <h2>Galletas Caseras</h2>
+          <p>Galletas crujientes hechas en casa, ideales para compartir.</p>
+        </div>
+      </div>
+    </section>
+    <div class="footer">
+      <p>&copy; 2025 Delicias de Postres. Todos los derechos reservados.</p>
+    </div>
+  </body>
+</html>
